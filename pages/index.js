@@ -32,11 +32,13 @@ export default function Home() {
       
       let transactionsData;
       try {
-        transactionsData = await transactionsResponse.json();
-        console.log('Transactions data:', transactionsData);
+        const responseText = await transactionsResponse.text();
+        console.log('Raw transactions response:', responseText);
+        transactionsData = JSON.parse(responseText);
+        console.log('Parsed transactions data:', transactionsData);
       } catch (parseError) {
         console.error('Error parsing transactions response:', parseError);
-        throw new Error('Failed to parse transactions response');
+        throw new Error(`Failed to parse transactions response: ${parseError.message}`);
       }
       
       if (!transactionsResponse.ok || !transactionsData.success) {
@@ -53,11 +55,13 @@ export default function Home() {
       
       let budgetsData;
       try {
-        budgetsData = await budgetsResponse.json();
-        console.log('Budgets data:', budgetsData);
+        const responseText = await budgetsResponse.text();
+        console.log('Raw budgets response:', responseText);
+        budgetsData = JSON.parse(responseText);
+        console.log('Parsed budgets data:', budgetsData);
       } catch (parseError) {
         console.error('Error parsing budgets response:', parseError);
-        throw new Error('Failed to parse budgets response');
+        throw new Error(`Failed to parse budgets response: ${parseError.message}`);
       }
       
       if (!budgetsResponse.ok || !budgetsData.success) {
