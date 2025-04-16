@@ -26,8 +26,18 @@ export default function Home() {
       setError(null);
 
       // Fetch transactions
+      console.log('Fetching transactions...');
       const transactionsResponse = await fetch("/api/transactions");
-      const transactionsData = await transactionsResponse.json();
+      console.log('Transactions response status:', transactionsResponse.status);
+      
+      let transactionsData;
+      try {
+        transactionsData = await transactionsResponse.json();
+        console.log('Transactions data:', transactionsData);
+      } catch (parseError) {
+        console.error('Error parsing transactions response:', parseError);
+        throw new Error('Failed to parse transactions response');
+      }
       
       if (!transactionsResponse.ok || !transactionsData.success) {
         throw new Error(transactionsData.message || `Failed to fetch transactions: ${transactionsResponse.status}`);
@@ -35,10 +45,20 @@ export default function Home() {
       setTransactions(transactionsData.data);
 
       // Fetch budgets
+      console.log('Fetching budgets...');
       const budgetsResponse = await fetch(
         `/api/budgets?month=${currentMonth}&year=${currentYear}`
       );
-      const budgetsData = await budgetsResponse.json();
+      console.log('Budgets response status:', budgetsResponse.status);
+      
+      let budgetsData;
+      try {
+        budgetsData = await budgetsResponse.json();
+        console.log('Budgets data:', budgetsData);
+      } catch (parseError) {
+        console.error('Error parsing budgets response:', parseError);
+        throw new Error('Failed to parse budgets response');
+      }
       
       if (!budgetsResponse.ok || !budgetsData.success) {
         throw new Error(budgetsData.message || `Failed to fetch budgets: ${budgetsResponse.status}`);

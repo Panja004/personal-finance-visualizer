@@ -20,34 +20,63 @@ export default async function handler(req, res) {
     switch (req.method) {
       case 'GET':
         const { month, year } = req.query;
+        console.log('GET budgets request:', { month, year });
+        
         if (!month || !year) {
+          console.log('Missing month or year in query');
           return res.status(400).json({
             success: false,
             error: 'Bad Request',
             message: 'Month and year are required'
           });
         }
-        const budgets = await Budget.find({ month, year });
-        return res.status(200).json({
-          success: true,
-          data: budgets
-        });
+
+        try {
+          const budgets = await Budget.find({ month, year });
+          console.log('Found budgets:', budgets.length);
+          return res.status(200).json({
+            success: true,
+            data: budgets
+          });
+        } catch (dbError) {
+          console.error('Database query error:', dbError);
+          return res.status(500).json({
+            success: false,
+            error: 'Database Error',
+            message: dbError.message
+          });
+        }
 
       case 'POST':
+        console.log('POST budget request body:', req.body);
+        
         if (!req.body) {
+          console.log('Missing request body');
           return res.status(400).json({
             success: false,
             error: 'Bad Request',
             message: 'Request body is required'
           });
         }
-        const budget = await Budget.create(req.body);
-        return res.status(201).json({
-          success: true,
-          data: budget
-        });
+
+        try {
+          const budget = await Budget.create(req.body);
+          console.log('Created budget:', budget);
+          return res.status(201).json({
+            success: true,
+            data: budget
+          });
+        } catch (dbError) {
+          console.error('Database create error:', dbError);
+          return res.status(500).json({
+            success: false,
+            error: 'Database Error',
+            message: dbError.message
+          });
+        }
 
       default:
+        console.log('Method not allowed:', req.method);
         res.setHeader('Allow', ['GET', 'POST']);
         return res.status(405).json({
           success: false,
