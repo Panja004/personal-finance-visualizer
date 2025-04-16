@@ -29,16 +29,29 @@ export default function Home() {
       console.log('Fetching transactions...');
       const transactionsResponse = await fetch("/api/transactions");
       console.log('Transactions response status:', transactionsResponse.status);
+      console.log('Transactions response headers:', Object.fromEntries(transactionsResponse.headers.entries()));
       
       let transactionsData;
       try {
         const responseText = await transactionsResponse.text();
         console.log('Raw transactions response:', responseText);
-        transactionsData = JSON.parse(responseText);
-        console.log('Parsed transactions data:', transactionsData);
-      } catch (parseError) {
-        console.error('Error parsing transactions response:', parseError);
-        throw new Error(`Failed to parse transactions response: ${parseError.message}`);
+        
+        // Check if the response starts with "An error"
+        if (responseText.startsWith('An error')) {
+          throw new Error(`Server returned error: ${responseText}`);
+        }
+        
+        try {
+          transactionsData = JSON.parse(responseText);
+          console.log('Parsed transactions data:', transactionsData);
+        } catch (parseError) {
+          console.error('JSON parse error:', parseError);
+          console.error('Response that failed to parse:', responseText);
+          throw new Error(`Failed to parse JSON response: ${responseText.substring(0, 100)}...`);
+        }
+      } catch (error) {
+        console.error('Error processing transactions response:', error);
+        throw error;
       }
       
       if (!transactionsResponse.ok || !transactionsData.success) {
@@ -52,16 +65,29 @@ export default function Home() {
         `/api/budgets?month=${currentMonth}&year=${currentYear}`
       );
       console.log('Budgets response status:', budgetsResponse.status);
+      console.log('Budgets response headers:', Object.fromEntries(budgetsResponse.headers.entries()));
       
       let budgetsData;
       try {
         const responseText = await budgetsResponse.text();
         console.log('Raw budgets response:', responseText);
-        budgetsData = JSON.parse(responseText);
-        console.log('Parsed budgets data:', budgetsData);
-      } catch (parseError) {
-        console.error('Error parsing budgets response:', parseError);
-        throw new Error(`Failed to parse budgets response: ${parseError.message}`);
+        
+        // Check if the response starts with "An error"
+        if (responseText.startsWith('An error')) {
+          throw new Error(`Server returned error: ${responseText}`);
+        }
+        
+        try {
+          budgetsData = JSON.parse(responseText);
+          console.log('Parsed budgets data:', budgetsData);
+        } catch (parseError) {
+          console.error('JSON parse error:', parseError);
+          console.error('Response that failed to parse:', responseText);
+          throw new Error(`Failed to parse JSON response: ${responseText.substring(0, 100)}...`);
+        }
+      } catch (error) {
+        console.error('Error processing budgets response:', error);
+        throw error;
       }
       
       if (!budgetsResponse.ok || !budgetsData.success) {

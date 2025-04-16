@@ -63,6 +63,7 @@ export default async function handler(req, res) {
         }
     } catch (error) {
         console.error('API Error:', error);
+        // Ensure we always return JSON, even for errors
         return res.status(500).json({
             success: false,
             error: 'Internal Server Error',
