@@ -81,29 +81,6 @@ http://localhost:3000
 
 ---
 
-## 📂 Project Structure
-
-```
-personal-finance-visualizer/
-├── components/           # Reusable UI components
-│   ├── BudgetChart.js
-│   ├── TransactionForm.js
-│   ├── TransactionList.js
-│   └── Insights.js
-├── lib/
-│   └── mongodb.js        # MongoDB connection helper
-├── models/
-│   └── Transaction.js    # Mongoose model
-├── pages/
-│   ├── api/transactions/
-│   │   ├── index.js
-│   │   └── [id].js
-│   ├── _app.js
-│   └── index.js
-├── public/               # Static files
-└── styles/               # Global styles and themes
-```
-
 ---
 
 ## 🌐 API Routes
