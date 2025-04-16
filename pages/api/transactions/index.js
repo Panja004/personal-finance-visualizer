@@ -25,7 +25,8 @@ export default async function handler(req, res) {
                 console.log('Fetching transactions...');
                 const transactions = await Transaction.find({})
                     .sort({ date: -1 })
-                    .limit(50);
+                    .limit(50)
+                    .lean(); // Use lean() for better performance
                 console.log('Found transactions:', transactions.length);
                 
                 const response = {
@@ -63,7 +64,22 @@ export default async function handler(req, res) {
         }
     } catch (error) {
         console.error('API Error:', error);
-        // Ensure we always return JSON, even for errors
+        // Check for specific error types
+        if (error.name === 'MongoServerSelectionError') {
+            return res.status(503).json({
+                success: false,
+                error: 'Service Unavailable',
+                message: 'Database server is not available'
+            });
+        }
+        if (error.name === 'MongoNetworkError') {
+            return res.status(503).json({
+                success: false,
+                error: 'Service Unavailable',
+                message: 'Network error connecting to database'
+            });
+        }
+        // Default error response
         return res.status(500).json({
             success: false,
             error: 'Internal Server Error',
