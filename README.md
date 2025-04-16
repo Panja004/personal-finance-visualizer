@@ -1,8 +1,3 @@
-Thanks for the clarification! Here's a `README.md` for your **Personal Finance Visualizer** project, written in the **same format and style** as the BookSphere one you shared:
-
----
-
-````markdown
 # Personal Finance Visualizer 💸
 
 A modern and minimal web app to help you track income, expenses, and budgets, and visualize your financial data. Built with **Next.js**, **MongoDB**, and **styled-components**, it offers an intuitive interface to manage personal finances with real-time insights.
@@ -51,6 +46,7 @@ Ensure the following are installed on your machine:
 git clone https://github.com/your-username/personal-finance-visualizer.git
 cd personal-finance-visualizer
 ```
+
 ````
 
 2. **Install Dependencies**
@@ -138,7 +134,7 @@ This project is licensed under the MIT License.
 
 ## 🧑‍💻 Author
 
-**Anish Panja**  
+**Anish Panja**
 📧 [anishpanj026@gmail.com](mailto:anishpanj026@gmail.com)
 
 ---
@@ -150,3 +146,4 @@ If you found this useful, please ⭐ the repo on GitHub!
 ```
 
 ```
+````
