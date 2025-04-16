@@ -93,8 +93,9 @@ export default function Home() {
         body: JSON.stringify(data),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to save transaction");
+      const responseData = await response.json();
+      if (!response.ok || !responseData.success) {
+        throw new Error(responseData.message || "Failed to save transaction");
       }
 
       await fetchData();
@@ -149,8 +150,9 @@ export default function Home() {
         method: "DELETE",
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to delete transaction");
+      const responseData = await response.json();
+      if (!response.ok || !responseData.success) {
+        throw new Error(responseData.message || "Failed to delete transaction");
       }
 
       await fetchData();
