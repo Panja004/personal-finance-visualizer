@@ -26,77 +26,101 @@ export default function Home() {
       setError(null);
 
       // Fetch transactions
-      console.log('Fetching transactions...');
+      console.log("Fetching transactions...");
       const transactionsResponse = await fetch("/api/transactions");
-      console.log('Transactions response status:', transactionsResponse.status);
-      console.log('Transactions response headers:', Object.fromEntries(transactionsResponse.headers.entries()));
-      
+      console.log("Transactions response status:", transactionsResponse.status);
+      console.log(
+        "Transactions response headers:",
+        Object.fromEntries(transactionsResponse.headers.entries())
+      );
+
       let transactionsData;
       try {
         const responseText = await transactionsResponse.text();
-        console.log('Raw transactions response:', responseText);
-        
+        console.log("Raw transactions response:", responseText);
+
         // Check if the response starts with "An error"
-        if (responseText.startsWith('An error')) {
+        if (responseText.startsWith("An error")) {
           throw new Error(`Server returned error: ${responseText}`);
         }
-        
+
         try {
           transactionsData = JSON.parse(responseText);
-          console.log('Parsed transactions data:', transactionsData);
+          console.log("Parsed transactions data:", transactionsData);
         } catch (parseError) {
-          console.error('JSON parse error:', parseError);
-          console.error('Response that failed to parse:', responseText);
-          throw new Error(`Failed to parse JSON response: ${responseText.substring(0, 100)}...`);
+          console.error("JSON parse error:", parseError);
+          console.error("Response that failed to parse:", responseText);
+          throw new Error(
+            `Failed to parse JSON response: ${responseText.substring(
+              0,
+              100
+            )}...`
+          );
         }
       } catch (error) {
-        console.error('Error processing transactions response:', error);
+        console.error("Error processing transactions response:", error);
         throw error;
       }
-      
+
       if (!transactionsResponse.ok || !transactionsData.success) {
-        throw new Error(transactionsData.message || `Failed to fetch transactions: ${transactionsResponse.status}`);
+        throw new Error(
+          transactionsData.message ||
+            `Failed to fetch transactions: ${transactionsResponse.status}`
+        );
       }
       setTransactions(transactionsData.data);
 
       // Fetch budgets
-      console.log('Fetching budgets...');
+      console.log("Fetching budgets...");
       const budgetsResponse = await fetch(
         `/api/budgets?month=${currentMonth}&year=${currentYear}`
       );
-      console.log('Budgets response status:', budgetsResponse.status);
-      console.log('Budgets response headers:', Object.fromEntries(budgetsResponse.headers.entries()));
-      
+      console.log("Budgets response status:", budgetsResponse.status);
+      console.log(
+        "Budgets response headers:",
+        Object.fromEntries(budgetsResponse.headers.entries())
+      );
+
       let budgetsData;
       try {
         const responseText = await budgetsResponse.text();
-        console.log('Raw budgets response:', responseText);
-        
+        console.log("Raw budgets response:", responseText);
+
         // Check if the response starts with "An error"
-        if (responseText.startsWith('An error')) {
+        if (responseText.startsWith("An error")) {
           throw new Error(`Server returned error: ${responseText}`);
         }
-        
+
         try {
           budgetsData = JSON.parse(responseText);
-          console.log('Parsed budgets data:', budgetsData);
+          console.log("Parsed budgets data:", budgetsData);
         } catch (parseError) {
-          console.error('JSON parse error:', parseError);
-          console.error('Response that failed to parse:', responseText);
-          throw new Error(`Failed to parse JSON response: ${responseText.substring(0, 100)}...`);
+          console.error("JSON parse error:", parseError);
+          console.error("Response that failed to parse:", responseText);
+          throw new Error(
+            `Failed to parse JSON response: ${responseText.substring(
+              0,
+              100
+            )}...`
+          );
         }
       } catch (error) {
-        console.error('Error processing budgets response:', error);
+        console.error("Error processing budgets response:", error);
         throw error;
       }
-      
+
       if (!budgetsResponse.ok || !budgetsData.success) {
-        throw new Error(budgetsData.message || `Failed to fetch budgets: ${budgetsResponse.status}`);
+        throw new Error(
+          budgetsData.message ||
+            `Failed to fetch budgets: ${budgetsResponse.status}`
+        );
       }
       setBudgets(budgetsData.data);
     } catch (error) {
       console.error("Error fetching data:", error);
-      setError(error.message || "An unexpected error occurred while fetching data");
+      setError(
+        error.message || "An unexpected error occurred while fetching data"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -221,17 +245,17 @@ export default function Home() {
 
   const handleBudgetDelete = async (budgetId) => {
     if (!budgetId) {
-      throw new Error('Budget ID is required');
+      throw new Error("Budget ID is required");
     }
 
     try {
       const response = await fetch(`/api/budgets/${budgetId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       const responseData = await response.json();
       if (!response.ok || !responseData.success) {
-        throw new Error(responseData.message || 'Failed to delete budget');
+        throw new Error(responseData.message || "Failed to delete budget");
       }
 
       // Refresh data after successful deletion
@@ -241,7 +265,6 @@ export default function Home() {
       setError(error.message);
     }
   };
-
 
   if (isLoading) {
     return (
@@ -263,7 +286,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          Personal Finance Tracker
+          Personal Finance Visualizer
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -272,7 +295,7 @@ export default function Home() {
             {/* Transaction Form */}
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">
-                {editingTransaction ? 'Edit Transaction' : 'Add Transaction'}
+                {editingTransaction ? "Edit Transaction" : "Add Transaction"}
               </h2>
               <TransactionForm
                 onSubmit={handleSubmit}
@@ -283,9 +306,9 @@ export default function Home() {
             {/* Budget Form */}
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">
-                {editingBudget ? 'Edit Budget' : 'Set Budget'}
+                {editingBudget ? "Edit Budget" : "Set Budget"}
               </h2>
-              <BudgetForm 
+              <BudgetForm
                 onSubmit={editingBudget ? handleBudgetEdit : handleBudgetSubmit}
                 initialData={editingBudget}
               />
@@ -302,12 +325,14 @@ export default function Home() {
             {/* Budget Overview */}
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">Budget Overview</h2>
-              <BudgetOverview 
-                budgets={budgets} 
-                transactions={transactions.filter(t => {
+              <BudgetOverview
+                budgets={budgets}
+                transactions={transactions.filter((t) => {
                   const date = new Date(t.date);
                   return (
-                    date.toLocaleString('default', { month: 'long' }).toLowerCase() === currentMonth &&
+                    date
+                      .toLocaleString("default", { month: "long" })
+                      .toLowerCase() === currentMonth &&
                     date.getFullYear() === currentYear
                   );
                 })}
@@ -318,7 +343,9 @@ export default function Home() {
 
             {/* Transactions List */}
             <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold mb-4">Recent Transactions</h2>
+              <h2 className="text-xl font-semibold mb-4">
+                Recent Transactions
+              </h2>
               <TransactionList
                 transactions={transactions}
                 onEdit={handleEdit}
