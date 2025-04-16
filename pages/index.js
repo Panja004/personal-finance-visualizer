@@ -23,11 +23,13 @@ export default function Home() {
   const fetchData = async () => {
     try {
       setIsLoading(true);
+      setError(null);
 
       // Fetch transactions
       const transactionsResponse = await fetch("/api/transactions");
       if (!transactionsResponse.ok) {
-        throw new Error("Failed to fetch transactions");
+        const errorData = await transactionsResponse.json();
+        throw new Error(errorData.message || `Failed to fetch transactions: ${transactionsResponse.status}`);
       }
       const transactionsData = await transactionsResponse.json();
       setTransactions(transactionsData);
@@ -37,13 +39,14 @@ export default function Home() {
         `/api/budgets?month=${currentMonth}&year=${currentYear}`
       );
       if (!budgetsResponse.ok) {
-        throw new Error("Failed to fetch budgets");
+        const errorData = await budgetsResponse.json();
+        throw new Error(errorData.message || `Failed to fetch budgets: ${budgetsResponse.status}`);
       }
       const budgetsData = await budgetsResponse.json();
       setBudgets(budgetsData);
     } catch (error) {
       console.error("Error fetching data:", error);
-      setError(error.message);
+      setError(error.message || "An unexpected error occurred while fetching data");
     } finally {
       setIsLoading(false);
     }
