@@ -99,7 +99,10 @@ export default function Home() {
         }),
       });
 
-      if (!response.ok) throw new Error("Failed to save budget");
+      const responseData = await response.json();
+      if (!response.ok || !responseData.success) {
+        throw new Error(responseData.message || "Failed to save budget");
+      }
 
       await fetchData();
     } catch (error) {
@@ -151,7 +154,10 @@ export default function Home() {
         }),
       });
 
-      if (!response.ok) throw new Error("Failed to update budget");
+      const responseData = await response.json();
+      if (!response.ok || !responseData.success) {
+        throw new Error(responseData.message || "Failed to update budget");
+      }
 
       await fetchData();
       setEditingBudget(null);
@@ -166,16 +172,22 @@ export default function Home() {
       throw new Error('Budget ID is required');
     }
 
-    const response = await fetch(`/api/budgets/${budgetId}`, {
-      method: 'DELETE',
-    });
+    try {
+      const response = await fetch(`/api/budgets/${budgetId}`, {
+        method: 'DELETE',
+      });
 
-    if (!response.ok) {
-      throw new Error('Failed to delete budget');
+      const responseData = await response.json();
+      if (!response.ok || !responseData.success) {
+        throw new Error(responseData.message || 'Failed to delete budget');
+      }
+
+      // Refresh data after successful deletion
+      await fetchData();
+    } catch (error) {
+      console.error("Error deleting budget:", error);
+      setError(error.message);
     }
-
-    // Refresh data after successful deletion
-    await fetchData();
   };
 
 
